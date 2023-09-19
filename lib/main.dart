@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:tech_task/domain/models/ingredient.dart';
+import 'package:tech_task/data/models/ingredient_model.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,9 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
       final decodedResponse = jsonDecode(response.body);
       final responselist = decodedResponse as List;
       _ingredientList =
-          responselist.map((e) => IngredientModel.fromMap(e)).toList();
-      // log('Response $responselist');
-      log('Response $_ingredientList');
+          responselist.map((e) => IngredientModel.fromJson(e)).toList();
+      log('Response $responselist');
+      // log('Response $_ingredientList');
       setState(() {});
     }
   }
