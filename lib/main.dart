@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:tech_task/domain/models/ingredient.dart';
 
 void main() => runApp(MyApp());
 
@@ -6,11 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Tech Task',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Tech Task'),
     );
   }
 }
@@ -25,12 +30,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<IngredientModel> _ingredientList = [];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  Future<void> _incrementCounter() async {
+    final response = await http.get(Uri.parse(
+        'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev/ingredients'));
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      final responselist = decodedResponse as List;
+      _ingredientList =
+          responselist.map((e) => IngredientModel.fromMap(e)).toList();
+      // log('Response $responselist');
+      log('Response $_ingredientList');
+      setState(() {});
+    }
   }
 
   @override
@@ -39,18 +52,20 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-          ],
+          children: _ingredientList
+              .map(
+                (e) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Name - ${e.title}'),
+                    Text('Best Before - ${e.useBy}'),
+                  ],
+                ),
+              )
+              .toList(),
         ),
       ),
       floatingActionButton: FloatingActionButton(

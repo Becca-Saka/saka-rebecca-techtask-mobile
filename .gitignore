@@ -106,6 +106,8 @@ Pods/
 # Flutter/Dart/Pub related
 **/doc/api/
 .dart_tool/
+.fvm/
+.vscode/
 .flutter-plugins
 .packages
 .pub-cache/
