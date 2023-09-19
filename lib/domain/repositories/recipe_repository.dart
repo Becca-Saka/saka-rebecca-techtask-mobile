@@ -3,5 +3,6 @@ import 'package:tech_task/core/error/failure.dart';
 import 'package:tech_task/domain/models/ingredient.dart';
 
 abstract class RecipeRepository {
-  Future<Either<Failure, IngredientModel>> getRecipe();
+  Future<Either<Failure, IngredientModel>> getIngredient();
+  // Future<Either<Failure, IngredientModel>> getRecipe();
 }

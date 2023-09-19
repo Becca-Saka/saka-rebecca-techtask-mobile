@@ -9,7 +9,7 @@ class GetRecipeUseCase {
     this.recipeRepository,
   );
 
-  Future<Either<Failure, IngredientModel>> execute() {
-    return recipeRepository.getRecipe();
+  Future<Either<Failure, IngredientModel>> getIngredients() {
+    return recipeRepository.getIngredient();
   }
 }
