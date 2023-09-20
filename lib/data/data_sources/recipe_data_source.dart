@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:tech_task/core/constants/constants.dart';
@@ -41,7 +40,6 @@ class RecipeDataSourceImpl extends RecipeDataSource {
     if (response.statusCode == 200) {
       final decodedBody = jsonDecode(response.body);
       final responselist = decodedBody as List;
-      log('$decodedBody');
       final _ingredientList =
           responselist.map((e) => RecipeModel.fromJson(e)).toList();
 

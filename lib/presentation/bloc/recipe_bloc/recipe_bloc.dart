@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_task/domain/entities/ingredient_entity.dart';
@@ -22,7 +21,6 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     result.fold((failure) {
       emit(IngredientLoadFailure(failure.message));
     }, (data) {
-      // emit(IngredientLoaded(ingredientList: data));
       emit(IngredientSelected(
         selectedLunchDate: event.selectedLunchDate,
         ingredientList: data,
@@ -35,11 +33,17 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     final state = this.state;
     if (state is IngredientSelected) {
       final ingredientList = state.ingredientList;
+
       final selected = ingredientList
           .firstWhere((e) => e.title == event.selectedIngredient.title);
-
-      if (state.selectedLunchDate.isBefore(selected.useBy)) {
-        log('Ingredient ${selected.useBy} ${state.selectedLunchDate}');
+      if (state.selectedIngredientList.contains(event.selectedIngredient)) {
+        final selectedList =
+            List<IngredientEntity>.from(state.selectedIngredientList)
+              ..remove(event.selectedIngredient);
+        emit(state.copyWith(
+          selectedIngredientList: selectedList,
+        ));
+      } else if (state.selectedLunchDate.isBefore(selected.useBy)) {
         final selectedList =
             List<IngredientEntity>.from(state.selectedIngredientList)
               ..add(selected);

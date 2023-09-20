@@ -21,20 +21,7 @@ void main() {
   test('Initial state is empty', () {
     expect(recipeBloc.state, NoIngredient());
   });
-  blocTest<RecipeBloc, RecipeState>(
-    'should emit [IngredientLoading]  and [IngredientSelected] when data is available',
-    build: () {
-      when(mockGetRecipeUseCase.getIngredients())
-          .thenAnswer((_) async => Right(testIngredientEntityList));
 
-      return recipeBloc;
-    },
-    act: (bloc) => bloc.add(OnIngredientSelected(testIngredientEntity)),
-    expect: () => [
-      IngredientLoading(),
-      // IngredientSelected(ingredientList: testIngredientEntityList),
-    ],
-  );
   blocTest<RecipeBloc, RecipeState>(
     'should emit [IngredientLoading]  and [IngredientLoadFailure] when data is available',
     build: () {

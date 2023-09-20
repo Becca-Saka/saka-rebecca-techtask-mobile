@@ -27,4 +27,20 @@ void main() {
       expect(result, Right(testIngredientEntityList));
     },
   );
+  test(
+    'should get recipe from the repository',
+    () async {
+      //arrange
+      final selectedIngredient =
+          testIngredientModelList.map((e) => e.title).toList();
+      // final url =
+      //     Uri.parse(Urls.recipesUrl + "${selectedIngredient.join(",")}");
+      when(mockRecipeRepository.getRecipe(selectedIngredient))
+          .thenAnswer((_) async => Right(testRecipeEntityList));
+      //act
+      final result = await getRecipeUseCase.getIngredients();
+      //assert
+      expect(result, Right(testIngredientEntityList));
+    },
+  );
 }

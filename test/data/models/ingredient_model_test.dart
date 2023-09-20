@@ -17,7 +17,8 @@ void main() {
   );
 
   test('should return a valid model from json', () {
-    final List<dynamic> jsonList = json.decode(readJson(dummyJsonUrl));
+    final List<dynamic> jsonList =
+        json.decode(readJson(dummyIngredientJsonUrl));
 
     final result = jsonList.map((e) => IngredientModel.fromJson(e)).toList();
 

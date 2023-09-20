@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tech_task/core/constants/constants.dart';
+import 'package:tech_task/core/routes/app_routes.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_bloc.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_event.dart';
-import 'package:tech_task/presentation/pages/ingredient_list_page.dart';
 
 class DateSelectorPage extends StatelessWidget {
   DateSelectorPage({Key key}) : super(key: key);
@@ -54,11 +55,14 @@ class DateSelectorPage extends StatelessWidget {
                       child: Container(
                         alignment: Alignment.centerLeft,
                         // height: 40,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 14,
+                        ),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey[300])),
-                        child: Text(' Selected Lunch Date: $value'),
+                        child: Text(
+                            'Lunch Date: ${DateFormat('yyyy-MM-dd').format(value)}'),
                       ),
                     ),
                     SizedBox(height: 100),
@@ -70,11 +74,8 @@ class DateSelectorPage extends StatelessWidget {
                           context
                               .read<RecipeBloc>()
                               .add(OnGetIngredient(selectedLunchDate.value));
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => IngredientListPage(),
-                            ),
-                          );
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.ingrendientList);
                         },
                         child: Text('Show Ingredients'),
                       ),

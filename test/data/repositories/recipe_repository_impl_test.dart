@@ -21,20 +21,6 @@ void main() {
   });
 
   group('Get Ingredeint List', () {
-    // test(
-    //   'should return Ingredient list when a call to the data source is successful',
-    //   () async {
-    //     when(mockRecipeDataSource.getIngredients()).thenAnswer(
-    //       (_) async => testIngredientModelList,
-    //     );
-    //     final result = await recipeRepositoryImpl.getIngredient();
-
-    //     expect(
-    //         result,
-    //         equals(
-    //             Right<Failure, List<IngredientEntity>>(testIngredientEntity)));
-    //   },
-    // );
     test(
       'should return server failure when a call to the data source is not successful',
       () async {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:tech_task/core/routes/app_routes.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_bloc.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_event.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_state.dart';
-
-import 'todays_meal_page.dart';
 
 class IngredientListPage extends StatelessWidget {
   const IngredientListPage({
@@ -46,20 +46,21 @@ class IngredientListPage extends StatelessWidget {
                               final item = state.ingredientList[index];
                               final isSelected =
                                   state.selectedIngredientList.contains(item);
-                              final isExpired =
+                              final isNotExpired =
                                   state.selectedLunchDate.isBefore(item.useBy);
                               return ListTile(
-                                enabled: isExpired,
+                                enabled: isNotExpired,
                                 onTap: () {
                                   context
                                       .read<RecipeBloc>()
                                       .add(OnIngredientSelected(item));
                                 },
                                 title: Text('${item.title}'),
-                                subtitle: Text('Exipres: ${item.useBy}'),
+                                subtitle: Text(
+                                    '${isNotExpired ? 'Exipres' : 'Expired on'}: ${DateFormat('yyyy-MM-dd').format(item.useBy)}'),
                                 trailing: Checkbox(
                                   value: isSelected,
-                                  onChanged: (v) {
+                                  onChanged: (_) {
                                     context
                                         .read<RecipeBloc>()
                                         .add(OnIngredientSelected(item));
@@ -80,13 +81,9 @@ class IngredientListPage extends StatelessWidget {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => TodaysMealPage(
-                                          selectedDate: state.selectedLunchDate,
-                                        ),
-                                      ),
-                                    );
+                                    Navigator.of(context).pushNamed(
+                                        AppRoutes.todayMeal,
+                                        arguments: state.selectedLunchDate);
                                     context.read<RecipeBloc>().add(OnGetRecipe(
                                         state.selectedIngredientList));
                                   },
