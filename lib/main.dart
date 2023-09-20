@@ -2,20 +2,36 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:tech_task/data/models/ingredient_model.dart';
+import 'package:tech_task/locator.dart';
+import 'package:tech_task/presentation/bloc/date_picker_bloc/date_picker_bloc.dart';
+import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_bloc.dart';
 
-void main() => runApp(MyApp());
+import 'presentation/pages/date_selector_page.dart';
+
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tech Task',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => locator<RecipeBloc>()),
+        BlocProvider(create: (_) => locator<DatePickerBloc>()),
+      ],
+      child: MaterialApp(
+        title: 'Tech Task',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: DateSelectorPage(),
+        // home: MyHomePage(title: 'Tech Task'),
       ),
-      home: MyHomePage(title: 'Tech Task'),
     );
   }
 }

@@ -12,7 +12,11 @@ final testIngredientModelList = [
     useBy: DateTime.parse('2019-11-25'),
   )
 ];
-final testIngredientEntity = [
+final testIngredientEntity = IngredientEntity(
+  title: 'Ham',
+  useBy: DateTime.parse('2019-11-25'),
+);
+final testIngredientEntityList = [
   IngredientEntity(
     title: 'Ham',
     useBy: DateTime.parse('2019-11-25'),

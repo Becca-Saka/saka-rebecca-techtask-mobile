@@ -20,11 +20,11 @@ void main() {
     () async {
       //arrange
       when(mockRecipeRepository.getIngredient())
-          .thenAnswer((_) async => Right(testIngredientEntity));
+          .thenAnswer((_) async => Right(testIngredientEntityList));
       //act
       final result = await getRecipeUseCase.getIngredients();
       //assert
-      expect(result, Right(testIngredientEntity));
+      expect(result, Right(testIngredientEntityList));
     },
   );
 }

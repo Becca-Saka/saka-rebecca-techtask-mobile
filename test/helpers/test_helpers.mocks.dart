@@ -5,10 +5,11 @@
 // @dart=2.9
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:http/http.dart' as _i4;
+import 'package:http/http.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:tech_task/data/data_sources/recipe_data_source.dart' as _i3;
 import 'package:tech_task/domain/repositories/recipe_repository.dart' as _i2;
+import 'package:tech_task/domain/usecase/get_recipe.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,10 +40,19 @@ class MockRecipeDataSource extends _i1.Mock implements _i3.RecipeDataSource {
   }
 }
 
+/// A class which mocks [GetRecipeUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetRecipeUseCase extends _i1.Mock implements _i4.GetRecipeUseCase {
+  MockGetRecipeUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+}
+
 /// A class which mocks [Client].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHttpClient extends _i1.Mock implements _i4.Client {
+class MockHttpClient extends _i1.Mock implements _i5.Client {
   MockHttpClient() {
     _i1.throwOnMissingStub(this);
   }
