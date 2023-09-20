@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:tech_task/core/error/failure.dart';
 import 'package:tech_task/domain/entities/ingredient_entity.dart';
+import 'package:tech_task/domain/entities/recipe_entity.dart';
 import 'package:tech_task/domain/repositories/recipe_repository.dart';
 
 class GetRecipeUseCase {
@@ -11,5 +12,10 @@ class GetRecipeUseCase {
 
   Future<Either<Failure, List<IngredientEntity>>> getIngredients() {
     return recipeRepository.getIngredient();
+  }
+
+  Future<Either<Failure, List<RecipeEntity>>> getRecipe(
+      List<String> ingredients) {
+    return recipeRepository.getRecipe(ingredients);
   }
 }

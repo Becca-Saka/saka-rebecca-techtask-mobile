@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tech_task/presentation/bloc/date_picker_bloc/date_picker_bloc.dart';
-import 'package:tech_task/presentation/bloc/date_picker_bloc/date_picker_state.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_bloc.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_event.dart';
 import 'package:tech_task/presentation/bloc/recipe_bloc/recipe_state.dart';
 
+import 'todays_meal_page.dart';
+
 class IngredientListPage extends StatelessWidget {
-  const IngredientListPage({Key key}) : super(key: key);
+  const IngredientListPage({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,60 +18,94 @@ class IngredientListPage extends StatelessWidget {
         title: Text('Ingredient List'),
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          BlocBuilder<DatePickerBloc, DatePickerState>(
-            builder: (context, state) {
-              if (state is NoDateSelected) {
-                return Text('No date selected');
-              }
+          SizedBox(height: 10),
+          Expanded(
+            child: BlocBuilder<RecipeBloc, RecipeState>(
+              buildWhen: (previous, current) {
+                return !current.toString().startsWith('Recipe');
+              },
+              builder: (context, state) {
+                if (state is NoIngredient || state is IngredientLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (state is IngredientLoadFailure) {
+                  return Text('Something went wrong');
+                }
 
-              if (state is DateSelected) {
-                return Text('${state.selectedDate}');
-              }
-              return SizedBox.shrink();
-            },
-          ),
-          BlocBuilder<RecipeBloc, RecipeState>(
-            builder: (context, state) {
-              if (state is NoIngredient || state is IngredientLoading) {
-                return CircularProgressIndicator();
-              }
-              if (state is IngredientLoadFailure) {
-                return Text('Something went wrong');
-              }
-
-              if (state is IngredientLoaded) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: state.ingredientList.map(
-                      (e) {
-                        return InkWell(
-                          onTap: () {},
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Name - ${e.title}'),
-                              Text('Best Before - ${e.useBy}'),
-                            ],
+                if (state is IngredientSelected) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: state.ingredientList.length,
+                            itemBuilder: (context, index) {
+                              final item = state.ingredientList[index];
+                              final isSelected =
+                                  state.selectedIngredientList.contains(item);
+                              final isExpired =
+                                  state.selectedLunchDate.isBefore(item.useBy);
+                              return ListTile(
+                                enabled: isExpired,
+                                onTap: () {
+                                  context
+                                      .read<RecipeBloc>()
+                                      .add(OnIngredientSelected(item));
+                                },
+                                title: Text('${item.title}'),
+                                subtitle: Text('Exipres: ${item.useBy}'),
+                                trailing: Checkbox(
+                                  value: isSelected,
+                                  onChanged: (v) {
+                                    context
+                                        .read<RecipeBloc>()
+                                        .add(OnIngredientSelected(item));
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                );
-              }
-              return SizedBox.shrink();
-            },
+                        ),
+                        Visibility(
+                          visible: state.selectedIngredientList.isNotEmpty,
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              child: SizedBox(
+                                height: 60,
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => TodaysMealPage(
+                                          selectedDate: state.selectedLunchDate,
+                                        ),
+                                      ),
+                                    );
+                                    context.read<RecipeBloc>().add(OnGetRecipe(
+                                        state.selectedIngredientList));
+                                  },
+                                  child: Text('Get Lunch'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<RecipeBloc>().add(OnGetIngredient());
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }

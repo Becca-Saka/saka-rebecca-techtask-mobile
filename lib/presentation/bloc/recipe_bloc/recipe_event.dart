@@ -8,7 +8,8 @@ abstract class RecipeEvent extends Equatable {
 }
 
 class OnGetIngredient extends RecipeEvent {
-  OnGetIngredient();
+  final DateTime selectedLunchDate;
+  OnGetIngredient(this.selectedLunchDate);
 }
 
 class OnIngredientSelected extends RecipeEvent {
@@ -16,4 +17,11 @@ class OnIngredientSelected extends RecipeEvent {
   OnIngredientSelected(this.selectedIngredient);
   @override
   List<Object> get props => [selectedIngredient];
+}
+
+class OnGetRecipe extends RecipeEvent {
+  final List<IngredientEntity> selectedIngredients;
+  OnGetRecipe(this.selectedIngredients);
+  @override
+  List<Object> get props => [selectedIngredients];
 }

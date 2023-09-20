@@ -3,6 +3,7 @@ import 'package:tech_task/domain/entities/ingredient_entity.dart';
 class IngredientModel extends IngredientEntity {
   final String title;
   final DateTime useBy;
+
   IngredientModel({
     this.title,
     this.useBy,
