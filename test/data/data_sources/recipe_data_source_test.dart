@@ -2,16 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:tech_task/core/constants/constants.dart';
+import 'package:tech_task/core/error/exceptions.dart';
 import 'package:tech_task/data/data_sources/recipe_data_source.dart';
 import 'package:tech_task/data/models/ingredient_model.dart';
 
+import '../../helpers/dummy_data/const_test_data.dart';
 import '../../helpers/json_reader.dart';
 import '../../helpers/test_helpers.mocks.dart';
 
 void main() {
-  const String dummyJsonUrl =
-      "helpers/dummy_data/dummy_ingredient_response.json";
-
   MockHttpClient mockHttpClient;
   RecipeDataSourceImpl recipeDataSourceImpl;
 
@@ -39,6 +38,21 @@ void main() {
           final result = await recipeDataSourceImpl.getIngredients();
 
           expect(result, isA<List<IngredientModel>>());
+        },
+      );
+      test(
+        'should return server exception when the response is not 200',
+        () async {
+          when(mockHttpClient.get(Uri.parse(Urls.ingredientListUrl)))
+              .thenAnswer(
+            (_) async => http.Response(
+              'Not found',
+              404,
+            ),
+          );
+          expect(() async {
+            await recipeDataSourceImpl.getIngredients();
+          }, throwsA(isA<ServerException>()));
         },
       );
     },

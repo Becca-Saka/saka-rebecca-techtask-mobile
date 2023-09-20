@@ -21,4 +21,8 @@ class IngredientModel extends IngredientEntity {
       useBy: DateTime.tryParse(map['use-by']),
     );
   }
+  IngredientEntity toEntity() => IngredientEntity(
+        title: title,
+        useBy: useBy,
+      );
 }
